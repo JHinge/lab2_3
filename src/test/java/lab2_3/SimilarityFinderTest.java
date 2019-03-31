@@ -12,18 +12,19 @@ import edu.iis.mto.similarity.SimilarityFinder;
 
 public class SimilarityFinderTest {
 
-    SimilarityFinder similarityFinder;
+    SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
     final static int THE_SAME = 1;
     final static int DIFFERENT = 0;
+
+    @Before
+    public void prepare() {
+        SequenceSearcherDoubler.callCounter = 0;
+
+    }
 
     public static double roundAvoid(double value, int places) {
         double scale = Math.pow(10, places);
         return Math.round(value * scale) / scale;
-    }
-
-    @Before
-    public void prepare() {
-        similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
     }
 
     @Test
@@ -75,6 +76,16 @@ public class SimilarityFinderTest {
         boolean result = Math.round(jackardSimilarity) == THE_SAME ? true : false;
 
         assertThat(result, is(equalTo(true)));
+    }
+
+    @Test
+    public void shouldCallSearchMethodZeroTimesIfFirstSequenceIsEmpty() {
+        int[] seq1 = {};
+        int[] seq2 = {3, 3, 4};
+
+        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        assertThat(0, is(equalTo(SequenceSearcherDoubler.callCounter)));
     }
 
 }
