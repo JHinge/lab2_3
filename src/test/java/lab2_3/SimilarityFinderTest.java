@@ -63,4 +63,18 @@ public class SimilarityFinderTest {
         assertThat(result, is(equalTo(true)));
     }
 
+    @Test
+    public void shouldReturnOneIfSequencesAreTheSame() {
+        int[] seq1 = {3, 3, 4};
+        int[] seq2 = {3, 3, 4};
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+
+        double jackardSimilarity = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        boolean result = Math.round(jackardSimilarity) == THE_SAME ? true : false;
+
+        assertThat(result, is(equalTo(true)));
+    }
+
 }
