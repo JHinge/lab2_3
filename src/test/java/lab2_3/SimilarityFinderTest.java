@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Vector;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +21,7 @@ public class SimilarityFinderTest {
     @Before
     public void prepare() {
         SequenceSearcherDoubler.callCounter = 0;
+        SequenceSearcherDoubler.recivedKeysToSearch.clear();
 
     }
 
@@ -101,4 +104,24 @@ public class SimilarityFinderTest {
 
         assertThat(3, is(equalTo(SequenceSearcherDoubler.callCounter)));
     }
+
+    @Test
+    public void shouldReciveExpectedAmountOfParameters() {
+        int[] seq1 = {1, 3, 8};
+        int[] seq2 = {1, 3, 4, 5};
+
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(false);
+
+        Vector<Integer> expectedParameters = new Vector<>();
+        expectedParameters.addElement(seq1[0]);
+        expectedParameters.addElement(seq1[1]);
+        expectedParameters.addElement(seq1[2]);
+
+        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        assertThat(expectedParameters, is(equalTo(SequenceSearcherDoubler.recivedKeysToSearch)));
+    }
+
 }
