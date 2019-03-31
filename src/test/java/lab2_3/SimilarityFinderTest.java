@@ -16,6 +16,11 @@ public class SimilarityFinderTest {
     final static int THE_SAME = 1;
     final static int DIFFERENT = 0;
 
+    public static double roundAvoid(double value, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(value * scale) / scale;
+    }
+
     @Before
     public void prepare() {
         similarityFinder = new SimilarityFinder(new SequenceSearcherDoubler());
@@ -27,7 +32,7 @@ public class SimilarityFinderTest {
         int[] seq2 = {};
 
         double jackardSimilarity = similarityFinder.calculateJackardSimilarity(seq1, seq2);
-        boolean result = Math.round(jackardSimilarity) == 1 ? true : false;
+        boolean result = Math.round(jackardSimilarity) == THE_SAME ? true : false;
         assertThat(result, is(equalTo(true)));
     }
 
@@ -38,10 +43,24 @@ public class SimilarityFinderTest {
         SequenceSearcherDoubler.valuesToReturn.push(false);
         SequenceSearcherDoubler.valuesToReturn.push(false);
         SequenceSearcherDoubler.valuesToReturn.push(false);
-        double jackardSimilarity = similarityFinder.calculateJackardSimilarity(seq1, seq2);
-        boolean result = Math.round(jackardSimilarity) == 1 ? true : false;
 
-        assertThat(result, is(equalTo(false)));
+        double jackardSimilarity = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        boolean result = Math.round(jackardSimilarity) == DIFFERENT ? true : false;
+
+        assertThat(result, is(equalTo(true)));
+    }
+
+    @Test
+    public void shouldReturnProperJackardSimilarityValueForDifferentSequences() {
+        int[] seq1 = {1, 2};
+        int[] seq2 = {3, 3, 4};
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(false);
+
+        double jackardSimilarity = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        boolean result = roundAvoid(jackardSimilarity, 2) == 0.25 ? true : false;
+
+        assertThat(result, is(equalTo(true)));
     }
 
 }
