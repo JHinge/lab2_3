@@ -88,4 +88,17 @@ public class SimilarityFinderTest {
         assertThat(0, is(equalTo(SequenceSearcherDoubler.callCounter)));
     }
 
+    @Test
+    public void shouldCallSearchMethodExpectedAmountOfTimes() {
+        int[] seq1 = {1, 3, 8};
+        int[] seq2 = {1, 3, 4, 5};
+
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(true);
+        SequenceSearcherDoubler.valuesToReturn.push(false);
+
+        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        assertThat(3, is(equalTo(SequenceSearcherDoubler.callCounter)));
+    }
 }
