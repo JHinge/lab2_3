@@ -31,4 +31,17 @@ public class SimilarityFinderTest {
         assertThat(result, is(equalTo(true)));
     }
 
+    @Test
+    public void shouldReturnZeroIfOneSequenceIsEmpty() {
+        int[] seq1 = {1, 2, 3};
+        int[] seq2 = {};
+        SequenceSearcherDoubler.valuesToReturn.push(false);
+        SequenceSearcherDoubler.valuesToReturn.push(false);
+        SequenceSearcherDoubler.valuesToReturn.push(false);
+        double jackardSimilarity = similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        boolean result = Math.round(jackardSimilarity) == 1 ? true : false;
+
+        assertThat(result, is(equalTo(false)));
+    }
+
 }
